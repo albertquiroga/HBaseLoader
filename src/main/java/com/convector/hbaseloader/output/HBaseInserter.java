@@ -27,7 +27,10 @@ public class HBaseInserter extends Outputer {
 
     private Put put;
 
+    private long startTime;
+
     protected HBaseInserter(String tableName) {
+        startTime = System.currentTimeMillis();
         this.tableName = tableName;
         config = HBaseConfiguration.create();
         connect();
@@ -71,7 +74,7 @@ public class HBaseInserter extends Outputer {
 
     @Override
     public void update(Observable o, Object arg) {
-        System.out.println(o.toString());
+        ProgressBarPrinter.update((double) arg,System.currentTimeMillis()-startTime);
         createPut((SingleRow) o);
         insertPut();
     }

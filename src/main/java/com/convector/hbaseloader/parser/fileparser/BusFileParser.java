@@ -32,7 +32,7 @@ public class BusFileParser implements FileParser {
     public BusFileParser (Path filePath) {
         this.filePath = filePath;
         totalRows = countLines();
-        currentRow = 0;
+        currentRow = 1;
         try {
             fileReader = new BufferedReader(new FileReader(filePath.toString()));
         } catch (FileNotFoundException e) {
@@ -44,11 +44,11 @@ public class BusFileParser implements FileParser {
     public void parseFile() {
         System.out.println("Parsing file " + filePath.getFileName() + "...");
         String line = readLine();
-        currentRow++;
         String[] qualifiers = null;
         if(line != null) qualifiers = ColumnParser.parseColumns(FileType.BUS,line); //TODO fix this filetype.metro
 
         while ((line = readLine()) != null){
+            ++currentRow;
             values = LineParser.parseValues(FileType.BUS,line);
             pairs = Pairer.makePairs(FileType.BUS,qualifiers,values);
             BusTranslator.translateToRow(currentRow/totalRows, pairs);

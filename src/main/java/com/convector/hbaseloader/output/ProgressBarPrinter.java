@@ -22,7 +22,7 @@ public abstract class ProgressBarPrinter {
         if(currentProgress == 1){
             System.out.println("done!" + " " + Utils.formatTimeInMs(currentElapsedTimeMillis));
         } else {
-            System.out.print((int)currentProgress*100+"/100%" + " " + Utils.formatTimeInMs(currentElapsedTimeMillis));
+            System.out.print(Utils.formatTimeInMs(currentElapsedTimeMillis));
         }
     }
 
