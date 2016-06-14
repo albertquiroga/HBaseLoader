@@ -24,7 +24,7 @@ public abstract class MetroTranslator {
         EnumMap<Qualifier,String> values = new EnumMap<Qualifier, String>(Qualifier.class);
         values.put(Qualifier.COMPANY,"1");
 
-        for (Pair p : pairs) {
+        for (Pair<MetroColumn,String> p : pairs) {
             MetroColumn mc = (MetroColumn) p.getFirst();
             Qualifier q;
             switch (mc){

@@ -24,7 +24,7 @@ public abstract class BusTranslator {
         EnumMap<Qualifier,String> values = new EnumMap<Qualifier, String>(Qualifier.class);
         values.put(Qualifier.COMPANY,"0");
 
-        for(Pair p : pairs){
+        for(Pair<BusColumn,String> p : pairs){
             BusColumn bc = (BusColumn) p.getFirst();
             Qualifier q;
             switch(bc){

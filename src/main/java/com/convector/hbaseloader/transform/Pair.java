@@ -3,21 +3,21 @@ package com.convector.hbaseloader.transform;
 /**
  * Created by pyro_ on 03/05/2016.
  */
-public class Pair {
+public class Pair <K,V>{
 
-    private Enum first;
-    private String second;
+    private K first;
+    private V second;
 
-    public Pair(Enum e, String s) {
+    public Pair(K e, V s) {
         first = e;
         second = s;
     }
 
-    public Enum getFirst() {
+    public K getFirst() {
         return first;
     }
 
-    public String getSecond() {
+    public V getSecond() {
         return second;
     }
 

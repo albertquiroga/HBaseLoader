@@ -1,79 +1,52 @@
 package com.convector.hbaseloader.parser.fileparser;
 
+import com.convector.hbaseloader.constants.regex.RegexList;
 import com.convector.hbaseloader.constants.sequence.RowKeySequenceNumber;
-import com.convector.hbaseloader.constants.values.FileType;
-import com.convector.hbaseloader.parser.utils.ColumnParser;
-import com.convector.hbaseloader.parser.utils.LineParser;
-import com.convector.hbaseloader.parser.utils.Pairer;
+import com.convector.hbaseloader.constants.values.MetroColumn;
 import com.convector.hbaseloader.transform.MetroTranslator;
-import com.convector.hbaseloader.transform.Pair;
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
 import java.nio.file.Path;
+import java.util.ArrayList;
 
 /**
  * Created by aquirogb on 09/05/2016.
  */
-public class MetroFileParser implements FileParser {
+public class MetroFileParser extends FileParser {
 
-    private Path filePath;
-    private BufferedReader fileReader;
-
-    private String[] values;
-    private Pair[] pairs;
-
-    private double totalRows;
-    private double currentRow;
+    private MetroColumn[] columns;
 
     public MetroFileParser (Path filePath) {
-        this.filePath = filePath;
-        totalRows = countLines();
-        currentRow = 0;
-        try {
-            fileReader = new BufferedReader(new FileReader(filePath.toString()));
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
+        super(filePath);
     }
 
     public void parseFile() {
         System.out.println("Parsing file " + filePath.getFileName() + "...");
+        //First line is column names
         String line = readLine();
-        String[] qualifiers = null;
-        if(line != null) qualifiers = ColumnParser.parseColumns(FileType.METRO,line); //TODO fix this filetype.metro
+        columns = parseColumns(line);
 
+        //The rest are values
         while ((line = readLine()) != null){
             currentRow++;
-            values = LineParser.parseValues(FileType.METRO,line);
-            pairs = Pairer.makePairs(FileType.METRO,qualifiers,values);
-            MetroTranslator.translateToRow(currentRow/totalRows, pairs);
+            super.values = parseValues(line);
+            MetroTranslator.translateToRow(currentRow/totalRows, super.makePairs(columns,values));
         }
         RowKeySequenceNumber.getInstance().close();
     }
 
-    @Override
-    public int countLines() {
-        int counter = 0;
-        try {
-            BufferedReader lineCounter = new BufferedReader(new FileReader(filePath.toString()));
-            while(lineCounter.readLine() != null) counter++;
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return counter;
+    private MetroColumn[] parseColumns(String columnLine) {
+        return fancyArray(columnLine.replace("\"","").split(RegexList.metroColumnSplitter));
     }
 
-    private String readLine() {
-        String line = null;
-        try {
-            line = fileReader.readLine();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return line;
+    private String[] parseValues(String valuesLine) {
+        return valuesLine.replace("\"","").split(RegexList.metroValueSplitter);
+    }
+
+    private MetroColumn[] fancyArray(String[] array) {
+        ArrayList<MetroColumn> arrayList = new ArrayList<>();
+        for(String s:array) if(!s.isEmpty()) arrayList.add(MetroColumn.valueOf(s.toUpperCase()));
+        MetroColumn[] newArray = new MetroColumn[arrayList.size()];
+        return arrayList.toArray(newArray);
     }
 
 }

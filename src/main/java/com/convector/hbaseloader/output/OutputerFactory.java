@@ -16,9 +16,6 @@ public abstract class OutputerFactory {
             case "hbase":       out = new HBaseInserter("validations");
                 break;
 
-            case "drill":       out = new HBaseDrillInserter("drillvalidations");
-                break;
-
             case "cartodb":     out = new CartoDBInserter(User.CARLES.toString());
                 break;
 
