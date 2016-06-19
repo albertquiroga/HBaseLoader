@@ -66,9 +66,9 @@ public class SingleRow extends Observable {
     }
 
     public JSONObject toJSON() {
-        auxJSON = new JSONObject();
         auxJSONArray = new JSONArray();
         for(Qualifier q : values.keySet()) {
+            auxJSON = new JSONObject();
             auxJSON.put("name",q.toString());
             auxJSON.put("family",QualifierToFamily.getFamily(q).toString());
             auxJSON.put("value",values.get(q));
