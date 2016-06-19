@@ -22,6 +22,9 @@ public abstract class OutputerFactory {
             case "progress":    out = new ScreenProgressOutputer();
                 break;
 
+            case "kafka":       out = new KafkaOutputer();
+                break;
+
             default:		    System.err.println("Outputter could not be identified");
         }
         return out;

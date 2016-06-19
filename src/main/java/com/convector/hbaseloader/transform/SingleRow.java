@@ -2,6 +2,7 @@ package com.convector.hbaseloader.transform;
 
 import com.convector.hbaseloader.constants.maps.QualifierToFamily;
 import com.convector.hbaseloader.constants.values.Qualifier;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.sql.Timestamp;
@@ -21,6 +22,7 @@ public class SingleRow extends Observable {
 
     private JSONObject currentJSON;
     private JSONObject auxJSON;
+    private JSONArray  auxJSONArray;
 
     private static SingleRow ourInstance = new SingleRow();
 
@@ -65,8 +67,14 @@ public class SingleRow extends Observable {
 
     public JSONObject toJSON() {
         auxJSON = new JSONObject();
-        for(Qualifier q : values.keySet()) auxJSON.put(q.toString(),values.get(q));
-        currentJSON = new JSONObject().put("rowkey",rowKey).put("timestamp",timestamp.toString()).put("qualifiers",auxJSON);
+        auxJSONArray = new JSONArray();
+        for(Qualifier q : values.keySet()) {
+            auxJSON.put("name",q.toString());
+            auxJSON.put("family",QualifierToFamily.getFamily(q).toString());
+            auxJSON.put("value",values.get(q));
+            auxJSONArray.put(auxJSON);
+        }
+        currentJSON = new JSONObject().put("rowkey",rowKey).put("timestamp",timestamp.toString()).put("qualifiers",auxJSONArray);
         return currentJSON;
     }
 
