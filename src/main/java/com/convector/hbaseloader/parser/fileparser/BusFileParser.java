@@ -20,7 +20,7 @@ public class BusFileParser extends FileParser {
     }
 
     public void parseFile() {
-        System.out.println("Parsing file " + filePath.getFileName() + "...");
+        System.out.println("Working on file " + filePath.getFileName() + "...");
         //First line is column names
         String line = readLine();
         columns = parseColumns(line);
