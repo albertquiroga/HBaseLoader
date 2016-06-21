@@ -16,6 +16,9 @@ public abstract class OutputerFactory {
             case "hbase":       out = new HBaseInserter("validations");
                 break;
 
+            case "timehbase":   out = new HBaseTimeInserter("finalvalidations");
+                break;
+
             case "cartodb":     out = new CartoDBInserter(User.CARLES.toString());
                 break;
 
