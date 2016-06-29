@@ -28,6 +28,9 @@ public abstract class OutputerFactory {
             case "kafka":       out = new KafkaOutputer();
                 break;
 
+            case "timekafka":   out = new TimedKafkaOutputer();
+                break;
+
             default:		    System.err.println("Outputter could not be identified");
         }
         return out;
